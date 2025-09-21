@@ -195,6 +195,24 @@ def html_style() -> str:
                 color: #fff;
                 border: 1px solid #666;
             }
+
+            .footer {
+                text-align: center;
+                margin-top: 80px;
+                padding: 40px 0;
+                border-top: 1px solid rgba(255, 255, 255, 0.2);
+                color: #8fa0b3;
+            }
+            
+            .footer a {
+                color: #4ecdc4;
+                text-decoration: none;
+            }
+            
+            .footer a:hover {
+                text-decoration: underline;
+            }
+        
             ul.targets { margin:0; padding-left:1.1rem; }
             ul.targets li { margin:6px 0 10px; line-height:1.25; }
             ul.targets small { color:#cdd; }
@@ -223,6 +241,7 @@ def render_main_display(acct, weather_html, reason_html, top5_html, bortleLink, 
     logo_moon_url = url_for('static', filename=f"moonphases/{MOON_FACTORS.get(phase_idx, MOON_FACTORS[-1])[0]}")
     bortlechart_url = url_for('static', filename='bortlechart.png')
     bortlebadge_url = url_for('static', filename=f'bortle/bortle_unknown.png')
+    logo_favicon = url_for('static', filename='favicon.ico')
     if acct.bortle:
         bortlebadge_url = url_for('static', filename=f'bortle/bortle_B{str(acct.bortle)}_overlay_bigtext.png')
     return f"""
@@ -230,12 +249,12 @@ def render_main_display(acct, weather_html, reason_html, top5_html, bortleLink, 
         {html_style()}
         <head>
             <title>Messier Target Guidance Computer</title>
-            <link rel="icon" type="image/x-icon" href="{url_for('static', filename='favicon.ico')}">
+            <link rel="icon" type="image/x-icon" href="{logo_favicon}">
         </head>
         <body>
         <center>
         <table border=0><tr><td valign=center>
-            <a href="https://github.com/stanlm105/MessierExplore"><img src="{logo_url}" alt="Logo" width="75" style="vertical-align: middle;"></a>
+            <a href="https://www.messierexplore.com"><img src="{logo_url}" alt="Logo" width="75" style="vertical-align: middle;"></a>
             </td><td valign=center>
                 <big><font face=arial color=white>
                     &nbsp;&nbsp;&nbsp;&nbsp;Welcome to Room <font color=lime>{acct.room_name}</font>, <font color=lime>{acct.country}</font>, <font color=lime>{acct.zipcode}</font>
@@ -436,8 +455,11 @@ def index():
     # GET: show login form
     logo_url = url_for('static', filename='logo_main_2_nobg.png')
     sample_url = url_for('static', filename='tcg_sample.png')
+    logo_favicon = url_for('static', filename='favicon.ico')
     return f"""
     <html>{html_style()}<head><title>Messier Target Guidance Computer</title></head>
+    <link rel="icon" type="image/x-icon" href="{logo_favicon}">
+    </head>
     <body>
     <center>
     <a href="https://github.com/stanlm105/MessierExplore"><img src="{logo_url}" alt="Logo" width="400"></a><br>
@@ -451,14 +473,14 @@ def index():
         <tr><td colspan=2 align=center><br><button type="submit">Engage!</button><br></td></tr>
         </table>
     </form>
-    <table border=0><tr><td width=500>
-    <font color=white size=2>
-    <p>Hi, this is free to use, no ads, no tracking, no personal data stored. 
-    Just enter a room name, country, zip code, and room key code to create or resume a Messier observing journey. 
-    The key and the room name is just a way you can save & resume your journey at a later time by entering the same values.</p>
-    <p>I hope these results are useful -- I'm finding out myself too. If there is any feedback (good or otherwise), please e-mail stanlm@gmail.com.</p>
-    </font></td></tr></table>
-    <br>
+    <footer class="footer">
+        <p>
+            Free to use • No ads • No tracking • Open source<br>
+            Created with ❤️ for the astronomy community<br>
+            <a href="https://github.com/stanlm105/MessierExplore">View on GitHub</a> | 
+            <a href="mailto:stanlm@gmail.com">Contact</a> | 21 Sep 2025
+        </p>
+    </footer>
     </center>
     </body>
     </html>

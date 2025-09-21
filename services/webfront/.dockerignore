@@ -1,0 +1,5 @@
+# services/webfront/.dockerignore
+*.psd
+*.sketch
+*.ai
+.DS_Store

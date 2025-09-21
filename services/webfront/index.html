@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Messier Explore - Your Gateway to Deep Space Observation</title>
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #0c1445 0%, #1a1a2e 50%, #16213e 100%);
+            color: #ffffff;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+        
+        /* Animated stars background */
+        .stars {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+        
+        .star {
+            position: absolute;
+            background: white;
+            border-radius: 50%;
+            animation: twinkle 3s infinite;
+        }
+        
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.3; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.2); }
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 60px;
+            padding: 40px 0;
+        }
+        
+        .logo {
+            max-width: 550px;
+            height: auto;
+            margin-bottom: 30px;
+            filter: drop-shadow(0 0 20px rgba(255, 255, 255, 0.3));
+        }
+        
+        .main-title {
+            font-size: 3.5em;
+            font-weight: bold;
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4, #45b7d1, #96ceb4);
+            background-size: 400% 400%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: gradientShift 4s ease infinite;
+            margin-bottom: 20px;
+            text-shadow: 0 0 30px rgba(255, 255, 255, 0.3);
+        }
+        
+        @keyframes gradientShift {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+        
+        .subtitle {
+            font-size: 1.3em;
+            color: #b8c5d6;
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+        
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+            gap: 40px;
+            margin-top: 60px;
+        }
+        
+        .service-card {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 30px;
+            text-align: center;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .service-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            transform: rotate(45deg);
+            transition: all 0.6s ease;
+            opacity: 0;
+        }
+        
+        .service-card:hover::before {
+            animation: shimmer 1.5s ease-in-out;
+        }
+        
+        @keyframes shimmer {
+            0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); opacity: 0; }
+            50% { opacity: 1; }
+            100% { transform: translateX(100%) translateY(100%) rotate(45deg); opacity: 0; }
+        }
+        
+        .service-card:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            border-color: rgba(255, 255, 255, 0.4);
+        }
+        
+        .service-image {
+            width: 100%;
+            max-width: 350px;
+            height: auto;
+            border-radius: 15px;
+            margin-bottom: 25px;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.3s ease;
+        }
+        
+        .service-card:hover .service-image {
+            border-color: rgba(255, 255, 255, 0.5);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+        }
+        
+        .service-title {
+            font-size: 2em;
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: #ffffff;
+        }
+        
+        .service-description {
+            font-size: 1.1em;
+            color: #b8c5d6;
+            margin-bottom: 25px;
+            line-height: 1.6;
+        }
+        
+        .service-button {
+            display: inline-block;
+            padding: 15px 35px;
+            background: linear-gradient(45deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-decoration: none;
+            border-radius: 30px;
+            font-weight: bold;
+            font-size: 1.1em;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .service-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s ease;
+        }
+        
+        .service-button:hover::before {
+            left: 100%;
+        }
+        
+        .service-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
+            border-color: rgba(255, 255, 255, 0.3);
+        }
+        
+        .logbook-card {
+            background: linear-gradient(135deg, rgba(255, 107, 107, 0.1) 0%, rgba(78, 205, 196, 0.1) 100%);
+        }
+        
+        .tgc-card {
+            background: linear-gradient(135deg, rgba(69, 183, 209, 0.1) 0%, rgba(150, 206, 180, 0.1) 100%);
+        }
+        
+        .footer {
+            text-align: center;
+            margin-top: 80px;
+            padding: 40px 0;
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+            color: #8fa0b3;
+        }
+        
+        .footer a {
+            color: #4ecdc4;
+            text-decoration: none;
+        }
+        
+        .footer a:hover {
+            text-decoration: underline;
+        }
+        
+        /* Mobile responsive */
+        @media (max-width: 768px) {
+            .services-grid {
+                grid-template-columns: 1fr;
+                gap: 30px;
+            }
+            
+            .main-title {
+                font-size: 2.5em;
+            }
+            
+            .subtitle {
+                font-size: 1.1em;
+            }
+            
+            .service-card {
+                padding: 25px;
+            }
+            
+            .service-title {
+                font-size: 1.7em;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .container {
+                padding: 15px;
+            }
+            
+            .main-title {
+                font-size: 2em;
+            }
+            
+            .service-card {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="stars" id="stars"></div>
+    
+    <div class="container">
+        <header class="header">
+            <img src="logo_main_2_nobg.png" alt="Messier Explore Logo" class="logo">
+            <!--<h1 class="main-title">Messier Explore</h1>-->
+            <p class="subtitle">
+                Your comprehensive toolkit for deep-space observation and Messier object discovery.<br>
+                Choose your adventure in exploring the night sky's most magnificent celestial treasures.
+            </p>
+        </header>
+        
+        <div class="services-grid">
+            <!-- Logbook Service -->
+            <div class="service-card logbook-card">
+                <img src="logbook_sample.png" alt="Messier Logbook Preview" class="service-image">
+                <h2 class="service-title">Messier Logbook</h2>
+                <p class="service-description">
+                    Generate your personalized, printable Messier observation logbook. Track your progress through all 110 deep-space objects with beautiful, professional layouts designed for field use.
+                </p>
+                <a href="https://logbook.messierexplore.com" class="service-button">
+                    Create My Logbook
+                </a>
+            </div>
+            
+            <!-- Target Guidance Computer -->
+            <div class="service-card tgc-card">
+                <img src="tcg_sample.png" alt="Target Guidance Computer Preview" class="service-image">
+                <h2 class="service-title">Target Guidance Computer</h2>
+                <p class="service-description">
+                    Get intelligent, real-time recommendations for tonight's best Messier targets based on your location, weather conditions, moon phase, and light pollution levels.
+                </p>
+                <a href="https://tgc.messierexplore.com" class="service-button">
+                    Plan Tonight's Session
+                </a>
+            </div>
+        </div>
+        
+        <footer class="footer">
+            <p>
+                Free to use • No ads • No tracking • Open source<br>
+                Created with ❤️ for the astronomy community<br>
+                <a href="https://github.com/stanlm105/MessierExplore">View on GitHub</a> | 
+                <a href="mailto:stanlm@gmail.com">Contact</a>
+            </p>
+        </footer>
+    </div>
+    
+    <script>
+        // Generate animated stars
+        function createStars() {
+            const starsContainer = document.getElementById('stars');
+            const numStars = 100;
+            
+            for (let i = 0; i < numStars; i++) {
+                const star = document.createElement('div');
+                star.className = 'star';
+                
+                // Random position
+                star.style.left = Math.random() * 100 + '%';
+                star.style.top = Math.random() * 100 + '%';
+                
+                // Random size
+                const size = Math.random() * 3 + 1;
+                star.style.width = size + 'px';
+                star.style.height = size + 'px';
+                
+                // Random animation delay
+                star.style.animationDelay = Math.random() * 3 + 's';
+                
+                starsContainer.appendChild(star);
+            }
+        }
+        
+        // Initialize stars when page loads
+        document.addEventListener('DOMContentLoaded', createStars);
+        
+        // Add subtle parallax effect on scroll
+        window.addEventListener('scroll', () => {
+            const scrolled = window.pageYOffset;
+            const stars = document.getElementById('stars');
+            stars.style.transform = `translateY(${scrolled * 0.1}px)`;
+        });
+    </script>
+</body>
+</html>

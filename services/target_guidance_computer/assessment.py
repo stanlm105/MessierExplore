@@ -275,7 +275,7 @@ def target_assessment(
     narrative = []
     narrative.append("<table border=0><tr>")
     narrative.append(f"<td>Target Assessment Time Basis:</td><td>9:00 PM Local ({str(tz)})</td></tr>")
-    narrative.append(f"<tr><td>Messier Targets:</td><td>{start_total} deep sky objects (DSOs),<br>a double star and an asterism</td></tr>")
+    narrative.append(f"<tr><td>Messier Targets:</td><td>{start_total} deep sky objects (*)</td></tr>")
     narrative.append(f"<tr><td>Already Seen Objects:</td><td>minus {removed_seen} objects already seen</td>"
                      f"<td><font color=lime size=2>Remaining targets: {remaining_after_seen}</font></td></tr>")
     narrative.append(f"<tr><td>Weather {weather_label}:</td><td>minus {removed_weather} faintest obj (mag &gt; {w_limit:.1f})</td>"
