@@ -13,9 +13,9 @@ _Free Astronomy Tools & Mini-Projects — explore the night sky with smart, begi
 
 <img src="static/logbook_sample_bk.png" width=400><br>
 
-> Hi, my name is Mike. MessierExplore is a personal astronomy journey turned open toolkit — offering logbooks, sky guidance, and astrophotography utilities. Free, beginner-friendly, and built with Python + cloud tools.<br><br>
-> There are many different avenues one could take in this topic, which makes for a very deep hobby/journey! I hope to cover several branches over time, but for now, the explorations here will be leaning towards the route of the classic dobsonian.<br><br>
-> The suggested first quest in this journey is the classic exercise of the Messier Observing Program for logging and sketching the 110 Messier objects of the night sky, with log book and assisted guidance computer below.<br><br>
+> Hi, my name is Mike. MessierExplore is a personal astronomy journey turned open toolkit — offering logbooks, sky guidance, and astrophotography utilities. Free, beginner-friendly, and built with python + sqlite for local, or live-linked below is a containerized Flask backend deployed to Cloud Run and Cloud Sql on GCS (private VPC and least-privilege IAM).<br><br>
+> There are many tech hardware and workflows one can go with, which makes for a very deep hobby/journey! I hope to cover several avenues over time, but for now, the explorations starts leaning towards the classic dobsonian telescope and the 110 Messier Objects.<br><br>
+> The suggested first quest in this journey is the Messier Observing Program for logging and sketching the 110 Messier objects of the night sky, with log book and assisted guidance computer below.<br><br>
 
 ---
 
@@ -33,27 +33,26 @@ _Free Astronomy Tools & Mini-Projects — explore the night sky with smart, begi
 <img src="static/logbook_sample_bk.png" width=500><br>
 - **What it is:** Printable logbook with the 110 Messier objects.
 - **Get your personalized PDF Free:** https://logbook.messierexplore.com
-- **Code:** Located in this repository as a python command-line script, and then as a web service; see files named logbook.
+- **Code:** Located in this repository as a python command-line script, and then as a cloud deployed web service.
 - **Features:** personalized cover page, tracking checklist, per-object log pages, sketch area, clean typography.
 
-### 2) Messier Target Guidance Computer (Web App)
+### 2) Messier Target Guidance Computer (Web App: Container, Cloud Run, Cloud SQL)
 <img src="static/tcg_sample.png" width=500><br>
 - 📝 **Inputs:** location, passphrase  
-- 📊 **Outputs:** ranked list of suggested Messier targets + tonight’s conditions  
+- 📊 **Outputs:** live-conditions-adjusted ranked list of suggested Messier targets at your location + explanations 
 - 🌐 **Try it:** https://tgc.messierexplore.com
 
 > 🚀 **Why Target Guidance Computer is Exciting**  
 > The Target Guidance Computer is more than a Messier checklist – it’s a smart companion that combines astronomy math with real-world conditions.  
 > ✨ Shows you what you haven’t logged yet  
 > 🌙 Highlights which objects sit high and clear of the Moon  
-> ☁️ Explains how tonight’s clouds, darkness, and sky quality affect your session
+> ☁️ Explains how tonight’s clouds, darkness, and sky quality affect your session; dew risk and heat/shield assessment too.
 >   
-> Minimalist design so you're up and running in seconds, with your approximate location, the tool personalizes your observing journey, tracks your “seen” list, and serves up the conditions and best targets for **today at 9 PM local time**.
+> Minimalist design so you're up and running in seconds, with your approximate location, the tool personalizes your observing journey, tracks your “seen” list, and serves up the conditions and best targets for **tonight at 9 PM local time**.
 > 💡 Lightweight, free, and built to grow – practical backend engineering powering human-friendly exploration of the night sky.
-> Mobile formatted display coming soon
 
 ### 3) Dobsonian Astrophotography — Simple Stacking Utils (CLI, GUI.. tbd)
-- **What it is:** Lightweight, beginner-friendly image stacking pipeline for Dobsonian + MFT DSLR. For myself I'm planning micro four thirds adapter to keep weight down. Dobsonian is not expected to be best choice for astrophotography, but like a manual transmission car, I'd like to explore what steps optimize the fun and results even if it might not outclass dedicated rigs and smartscopes.
+- **What it is:** Lightweight, beginner-friendly image stacking pipeline for Dobsonian + MFT DSLR. For myself I'm planning micro four thirds DSLR size to keep size and weight down. While dobsonian is not expected to be top choice for astrophotography, it is nice for live photon-to-eyeball observing and I'm exploring the capture of this.
 - **Download:** (link to release binary or quickstart)
 
 > Want something added? Open an issue with feature ideas ✨
