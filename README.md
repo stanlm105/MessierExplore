@@ -13,8 +13,8 @@ _Free Astronomy Tools & Mini-Projects — explore the night sky with smart, begi
 
 <img src="static/logbook_sample_bk.png" width=400><br>
 
-> Hi, my name is Mike. MessierExplore is a personal astronomy journey turned open toolkit — offering logbooks, sky guidance, and astrophotography utilities. Free, beginner-friendly, and built with python + sqlite for local, or live-linked below is a containerized Flask backend deployed to Cloud Run and Cloud Sql on GCS (private VPC and least-privilege IAM).<br><br>
-> There are many tech hardware avenues and different paths one choose, which makes for a very deep hobby/journey! I hope to cover several avenues over time, but for now, the exploration here leans towards the classic dobsonian telescope and the 110 Messier Objects.<br><br>
+> Hi, my name is Mike. MessierExplore is a personal astronomy journey turned open toolkit — offering logbooks, sky guidance, and astrophotography utilities. Free, beginner-friendly, and built with python + sqlite for local; then live-linked below are also containerized Flask backend deployed to Cloud Run and Cloud Sql on GCS (private VPC and least-privilege IAM).<br><br>
+> There are many astro tech choices and methodologies to choose from, which makes for a very deep journey! I hope to cover several avenues over time, but for now, the exploration here leans towards the classic dobsonian telescope and the 110 Messier Objects.<br><br>
 > The suggested first quest in this journey is the Messier Observing Program for logging and sketching the 110 Messier objects of the night sky, with log book and assisted guidance computer below.<br><br>
 
 ---
