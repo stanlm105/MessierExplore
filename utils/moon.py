@@ -50,6 +50,20 @@ def _phase_idx_from_angle(deg: float) -> int:
     elif deg < 292.5: return 6                # Last Quarter
     else:              return 7                # Waning Crescent
 
+def _recommended_sep_min(illum: float, alt_deg: float) -> float:
+    """
+    Minimum DSO separation from the Moon, in degrees.
+
+    - 0° if the Moon is below the horizon or essentially new (≤5% illuminated)
+    - Otherwise scales roughly linearly from ~20° (thin crescent) to ~45° (full)
+    """
+    if alt_deg < 0 or illum <= 0.05:
+        return 0.0
+    # map 5%..100% -> 20°..45°
+    # (subtract 0.05 so 5% starts at 0 on the scale)
+    frac = max(0.0, min(1.0, (illum - 0.05) / 0.95))
+    return 20.0 + 25.0 * frac
+
 def get_moon_state(lat: float, lon: float, when: datetime) -> dict:
     """
     Compute moon state for given location and time.
@@ -143,8 +157,7 @@ def moon_recommend_targets(
     """
     when = when or datetime.now(timezone.utc)
     moon = get_moon_state(lat, lon, when)
-    # 20° at new moon → 45° at full moon
-    sep_min = 20.0 + 25.0 * moon["illum"]
+    sep_min = _recommended_sep_min(moon["illum"], moon["alt_deg"])
 
     out = []
     for o in catalog:
@@ -216,12 +229,16 @@ def moon_narrative(moon: dict) -> str:
     else:
         pos = f"high in the {dir8}"
 
-    # Separation rule used in your recommender (20° @ new → 45° @ full)
-    sep_min = int(round(20 + 25 * moon["illum"]))
+    sep_min = int(round(_recommended_sep_min(moon["illum"], moon["alt_deg"])))
+
+    avoid_text = (
+        "No need to avoid the Moon tonight." if sep_min == 0
+        else f"Avoid DSOs within ~{sep_min}° of the Moon."
+    )
 
     return (
         f"{illum_pct}% illuminated.<br>"
         f"At 9:00 PM it’s {pos} "
         f"({alt:.0f}° alt, az {az:.0f}°, {dir8}).<br>"
-        f"Moon glare: <i>{glare}</i>. Avoid DSOs within ~{sep_min}° of the Moon."
+        f"Moon glare: <i>{glare}</i>. {avoid_text}"
     )
