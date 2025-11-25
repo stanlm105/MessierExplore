@@ -71,6 +71,12 @@ MOON_FACTORS = {
     7: ("moon_waning_crescent.png", "<b>Waning Crescent:</b> Dark skies, ideal moon for deep-sky observing.")
 }
 
+# ISO 3166-1 alpha-2 country codes for login dropdown. Using a static list avoids
+# an extra dependency or network call. Default selection is 'US'.
+COUNTRY_CODES = [
+    'US','CA','MX','GB','FR','DE','IT','ES','PT','NL','BE','CH','AT','DK','SE','NO','FI','IS','IE','AU','NZ','JP','KR','CN','TW','HK','SG','IN','ZA','BR','AR','CL','CO','PE','VE','UY','PY','BO','EC','GT','CR','PA','SV','HN','NI','DO','HT','CU','JM','BS','TT','BB','PR','IL','SA','AE','QA','KW','BH','OM','PK','BD','LK','NP','MM','TH','VN','MY','PH','ID','KH','LA','IR','IQ','SY','JO','LB','EG','MA','TN','DZ','LY','SD','ET','KE','UG','TZ','RW','BI','GH','CI','SN','ML','BF','NE','NG','CM','GA','CG','CD','GQ','SL','GM','LR','ZW','ZM','MW','MZ','AO','NA','BW','MG','MU','CV','KY','FO','GL','EE','LV','LT','PL','CZ','SK','HU','RO','BG','GR','TR','RU','UA','BY','GE','AM','AZ','KZ','UZ','TM','TJ','KG','AF','AL','BA','HR','ME','MK','RS','SI','MD','LU','MC','SM','VA','LI','PS'
+]
+
 def refresh_data_then_induce_display_update(acct):
     """
     Gather weather, moon, and Messier recommendations for the current account,
@@ -131,7 +137,7 @@ def refresh_data_then_induce_display_update(acct):
         cloud_pct=wx.get("cloud_pct", 0.0),
         bortle_class=acct.bortle,
         seen_numbers=seen_set,
-        top_n=5,
+        top_n=15,
         min_alt=25.0,
         weather=wx,
         hard_kill_on_weather=True
@@ -299,7 +305,7 @@ def render_main_display(acct, weather_html, reason_html, top5_html, bortleLink, 
                 <td class="night-sky-value">{reason_html}</td>
             </tr>
             <tr>
-                <td class="night-sky-label" valign=top>Top 5 Recommended<br>Targets:</td>
+                <td class="night-sky-label" valign=top>Top 15 Recommended<br>Targets:</td>
                 <td class="night-sky-value">
                     {top5_html}
                 </td>
@@ -456,31 +462,95 @@ def index():
     logo_url = url_for('static', filename='logo_main_2_nobg.png')
     sample_url = url_for('static', filename='tcg_sample.png')
     logo_favicon = url_for('static', filename='favicon.ico')
+    # Alphabetize the country codes for easier scanning; default select US.
+    country_options = ''.join(
+        f'<option value="{c}" {"selected" if c=="US" else ""}>{c}</option>'
+        for c in sorted(COUNTRY_CODES)
+    )
+    # Isolated JS (not an f-string) to avoid brace interpolation issues.
+    persistence_script = """
+    <script>
+    (function() {
+        var FIELD_NAMES = ['room_name','country','zipcode','passphrase'];
+        function storageAvailable() {
+            try { var x='__tgc_test'; localStorage.setItem(x,x); localStorage.removeItem(x); return true; } catch(e){ return false; }
+        }
+        function loadFields() {
+            if(!storageAvailable()) return;
+            var form = document.querySelector('form[method="post"]');
+            if(!form) return;
+            FIELD_NAMES.forEach(function(name){
+                var el = form.querySelector('[name="'+name+'"]');
+                if(!el) return;
+                var stored = localStorage.getItem('tgc_'+name);
+                if(stored) { el.value = stored; }
+            });
+        }
+        window.persistLoginFields = function persistLoginFields() {
+            if(!storageAvailable()) return true;
+            var form = document.querySelector('form[method="post"]');
+            if(!form) return true;
+            FIELD_NAMES.forEach(function(name){
+                var el = form.querySelector('[name="'+name+'"]');
+                if(!el) return;
+                localStorage.setItem('tgc_'+name, (el.value||'').trim());
+            });
+            return true;
+        };
+        document.addEventListener('DOMContentLoaded', loadFields);
+    })();
+    </script>
+    """
+    # Mobile-friendly styles scoped to the login page
+    login_style = """
+        <style>
+            .login-card { max-width: 560px; width: calc(100% - 24px); margin: 0 auto; padding: 12px; }
+            .login-card img.logo { max-width: 100%; height: auto; }
+            .night-sky-table { width: 100%; }
+            .night-sky-table td { padding: 10px; }
+            .night-sky-table input[type="text"], .night-sky-table select { width: 100%; box-sizing: border-box; font-size: 16px; padding: 10px; }
+            .night-sky-table button { width: 100%; padding: 12px; font-size: 18px; }
+            @media (max-width: 520px) {
+                .night-sky-table tr { display: block; margin-bottom: 8px; }
+                .night-sky-table td { display: block; width: 100%; }
+                .night-sky-label { text-align: left; padding-top: 8px; }
+            }
+        </style>
+        """
     return f"""
-    <html>{html_style()}<head><title>Messier Target Guidance Computer</title></head>
-    <link rel="icon" type="image/x-icon" href="{logo_favicon}">
+    <html>
+    {html_style()}
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Messier Target Guidance Computer</title>
+        <link rel="icon" type="image/x-icon" href="{logo_favicon}">
+        {login_style}
     </head>
     <body>
     <center>
-    <a href="https://github.com/stanlm105/MessierExplore"><img src="{logo_url}" alt="Logo" width="400"></a><br>
+    <div class="login-card">
+    <a href="https://github.com/stanlm105/MessierExplore"><img class="logo" src="{logo_url}" alt="Logo" width="400"></a><br>
     <font face=arial color=white><h2>Messier Target Guidance Computer</h2></font>
-    <form method="post">
+    <form method="post" onsubmit="return persistLoginFields();">
         <table class="night-sky-table"><tr>
-        <td class="night-sky-label">Room name:</td><td><input type="text" name="room_name" maxlength="25" required></td></tr>
-        <tr><td class="night-sky-label">Country (2-letter code):</td><td><input type="text" name="country" maxlength="2" required></td></tr>
-        <tr><td class="night-sky-label">Zip code:</td><td><input type="text" name="zipcode" maxlength="10" required></td></tr>
-        <tr><td class="night-sky-label">Room key code:</td><td><input type="password" name="passphrase" maxlength="50" required></td></tr>
-        <tr><td colspan=2 align=center><br><button type="submit">Engage!</button><br></td></tr>
+    <td class="night-sky-label">Room name:</td><td><input type="text" name="room_name" maxlength="25" value="guest" required></td></tr>
+    <tr><td class="night-sky-label">Country:</td><td><select name="country" required>{country_options}</select></td></tr>
+    <tr><td class="night-sky-label">Zip code:</td><td><input type="text" name="zipcode" maxlength="10" value="90210" required></td></tr>
+    <tr><td class="night-sky-label">Enter any room key:</td><td><input type="text" name="passphrase" maxlength="50" value="guest" required></td></tr>
+            <tr><td colspan=2 align=center><br><button type="submit">Engage!</button><br></td></tr>
         </table>
     </form>
     <footer class="footer">
         <p>
+            <b><font color=lime>If you come back again with the same room and key, your settings/progress will be remembered. Happy Messier Hunting!</font></b><br><br>
             Free to use • No ads • No tracking • Open source<br>
             Created with ❤️ for the astronomy community<br>
             <a href="https://github.com/stanlm105/MessierExplore">View on GitHub</a> | 
             <a href="mailto:stanlm@gmail.com">Contact</a> | 21 Sep 2025
         </p>
     </footer>
+    {persistence_script}
+        </div>
     </center>
     </body>
     </html>

@@ -36,7 +36,7 @@ limiter = Limiter(
 )
 
 @app.route("/generate", methods=["POST"])
-@limiter.limit("10 per hour")
+@limiter.limit("20 per hour")
 def generate() -> Response:
     """
     Handle form submission, validate the name, generate the personalized PDF,

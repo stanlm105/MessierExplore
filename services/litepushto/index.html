@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>LitePushTo</title>
+  <link rel="manifest" href="manifest.webmanifest" />
+  <meta name="theme-color" content="#0b1026" />
+  <link rel="apple-touch-icon" href="icons/icon-192.png" />
+  <link rel="icon" href="icons/icon-192.png" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <main>
+    <header>
+      <h1>LitePushTo (v0.1.15)</h1>
+      <p class="subtitle">Phone-based push-to for Messier objects</p>
+    </header>
+
+    <section id="permBanner" class="banner hidden" role="alert">
+      <div class="banner-text" id="permBannerText">
+        Motion/Orientation or Location permissions are required. On iOS, you must tap a button to grant access and use HTTPS.
+      </div>
+      <div class="row">
+        <button id="bannerTryAgain">Try again</button>
+        <button id="bannerHelp" class="secondary">Help</button>
+      </div>
+    </section>
+
+    <section id="permissions">
+      <button id="enableSensors">Enable Sensors</button>
+      <div class="hint">Grant Motion/Orientation and Location permissions</div>
+    </section>
+
+    <section id="liveSensors" class="card">
+      <h2>Live Sensor Angles</h2>
+      <div class="angles">
+        <div>Alpha (α): <span id="alpha">—</span></div>
+        <div>Beta (β): <span id="beta">—</span></div>
+        <div>Gamma (γ): <span id="gamma">—</span></div>
+      </div>
+      <div class="hint" style="margin-top:8px;">If values stay at "—", sensors are not firing events</div>
+    </section>
+
+    <section id="alignment" class="card">
+      <h2>Alignment</h2>
+      <div class="row">
+        <label for="alignStar">Alignment star</label>
+        <select id="alignStar">
+          <option value="vega">Vega (Alpha Lyrae)</option>
+          <option value="altair">Altair</option>
+          <option value="deneb">Deneb</option>
+          <option value="polaris">Polaris</option>
+        </select>
+      </div>
+      <div class="row" style="margin-top:8px; align-items:center; gap:8px;">
+        <input type="checkbox" id="flipScreen" />
+        <label for="flipScreen">Phone mounted upside down (flip screen orientation)</label>
+      </div>
+      <div class="row" style="gap:8px; align-items:center;">
+        <button id="alignBtn">Align (capture star)</button>
+        <button id="resetAlign" class="secondary">Reset alignment</button>
+      </div>
+      <div class="hint">Two-star alignment required: capture one star, then point to a different star and capture again.</div>
+      <div id="alignStatus" class="status"></div>
+    </section>
+
+    <section id="target" class="card">
+      <h2>Target</h2>
+      <div class="row">
+        <label for="messier">Messier target</label>
+        <select id="messier"></select>
+      </div>
+      
+      <div class="compass-container">
+        <canvas id="compass" width="200" height="200"></canvas>
+        <div id="compassStatus" class="compass-status">—</div>
+      </div>
+      <div class="row" style="margin-top:8px;">
+        <button id="refineHere" class="secondary">Target in scope!</button>
+      </div>
+      <div class="hint"><i>Tap when object in scope (increases guidance accuracy to next target)</i></div>
+      
+      <div class="guidance">
+        <div>ΔAz: <span id="deltaAz">—</span></div>
+        <div>ΔAlt: <span id="deltaAlt">—</span></div>
+      </div>
+      <div class="guidance">
+        <div>Distance: <span id="distance">—</span></div>
+      </div>
+    </section>
+
+    <section id="diagnostics" class="card">
+      <h2>Diagnostics</h2>
+      <pre id="diag">Loading...</pre>
+      <h3 style="margin-top:12px;">Console Log</h3>
+      <pre id="console" style="max-height:150px;font-size:12px;">Waiting for app...</pre>
+      <h3 style="margin-top:12px;">Script Errors</h3>
+      <pre id="errors" style="max-height:100px;font-size:12px;color:#ff6b6b;">None</pre>
+    </section>
+  </main>
+
+  <script>
+    // Catch and display any script errors before modules load
+    window.addEventListener('error', (e) => {
+      const err = document.getElementById('errors');
+      if(err) err.textContent = `ERROR: ${e.message}\nat ${e.filename}:${e.lineno}:${e.colno}\n${e.error?.stack || ''}`;
+    });
+    window.addEventListener('unhandledrejection', (e) => {
+      const err = document.getElementById('errors');
+      if(err) err.textContent = `PROMISE ERROR: ${e.reason}\n${e.reason?.stack || ''}`;
+    });
+    
+    // Immediate feedback that basic JS works
+    document.addEventListener('DOMContentLoaded', () => {
+      const diag = document.getElementById('diag');
+      const cons = document.getElementById('console');
+      if(diag) diag.textContent = 'Page loaded, waiting for app module...';
+      if(cons) cons.textContent = 'DOMContentLoaded fired at ' + new Date().toISOString();
+    });
+    
+    // Simple test: if this runs, basic JS works
+    setTimeout(() => {
+      const diag = document.getElementById('diag');
+      const cons = document.getElementById('console');
+      if(diag && diag.textContent.includes('waiting for app module')) {
+        diag.textContent = 'ERROR: App module did not initialize after 2s. Check Script Errors section or network tab.';
+      }
+      if(cons && cons.textContent.includes('DOMContentLoaded')) {
+        cons.textContent += '\nERROR: app.js module failed to load or execute after 2s.';
+      }
+    }, 2000);
+  </script>
+  <script type="module" src="app.js"></script>
+</body>
+</html>

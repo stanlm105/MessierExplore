@@ -73,6 +73,18 @@ def verify_login(db, room_name: str, country: str, zipcode: str, plain_pass: str
         )
     ).scalar_one_or_none()
     if acct and check_password_hash(acct.passphrase, plain_pass):
+        # If country or zipcode differ from stored values, update and re-geocode.
+        updated_location = False
+        new_country = country
+        new_zip = zipcode
+        if acct.country != country or (zipcode and acct.zipcode != zipcode):
+            lat, lon = lookup_latlon(country, zipcode)
+            if lat is not None and lon is not None:
+                acct.country = new_country
+                acct.zipcode = new_zip
+                acct.latitude = str(lat)
+                acct.longitude = str(lon)
+                updated_location = True
         acct.last_login_at = func.now()
         db.commit()
         return acct.id
