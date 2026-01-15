@@ -46,10 +46,11 @@ _Free Astronomy Tools & Mini-Projects — explore the night sky with beginner-fr
 > 🚀 **Why Target Guidance Computer is Exciting**  
 > The Target Guidance Computer is more than a Messier checklist – it’s a smart companion that combines astronomy math with real-world conditions.  
 > 🌙 Highlights which objects sit high and clear of the Moon  
-> ☁️ Explains how tonight’s clouds, darkness, and sky quality affect your session; dew risk and heat/shield assessment too.
+> ☁️ Explains how tonight’s clouds, darkness, and sky quality affect your session; dew risk and heat/shield assessment too.  
 > ✨ Shows you what you haven’t logged yet  
 >   
-> Minimalist design so you're up and running in seconds, with your approximate location, the tool personalizes your observing journey, tracks your “seen” list, and serves up the conditions and best targets for **tonight at 9 PM local time**.
+> Minimalist design so you're up and running in seconds, with your approximate location, the tool personalizes your observing journey, tracks your “seen” list, and serves up the conditions and best targets for **tonight at 9 PM local time**.  
+>
 > 💡 Also added is Jupiter Great Red Spot (GRS) next transit time (at your location) so you can catch the 195 year old storm via live photons!
 
 ### 3) Dobsonian Astrophotography — Simple Stacking Utils (CLI, GUI.. tbd)
