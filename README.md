@@ -1,6 +1,6 @@
 <img src="static/logo_main_2_nobg.png" width=400><br>
 # MessierExplore  
-_Free Astronomy Tools & Mini-Projects — explore the night sky with smart, beginner-friendly utilities._  
+_Free Astronomy Tools & Mini-Projects — explore the night sky with beginner-friendly utilities._  
 
 [![Made with Python](https://img.shields.io/badge/Python-3.11+-informational)]()
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)]()
@@ -13,8 +13,8 @@ _Free Astronomy Tools & Mini-Projects — explore the night sky with smart, begi
 
 <img src="static/logbook_sample_bk.png" width=400><br>
 
-> Hi, my name is Mike. MessierExplore is a personal astronomy journey turned open toolkit — offering logbooks, sky guidance, and astrophotography utilities. Free, beginner-friendly, and built with python + sqlite for local; then live-linked below are also containerized Flask backend deployed to Cloud Run and Cloud Sql on GCS (private VPC and least-privilege IAM).<br><br>
-> There are many astro tech choices and methodologies to choose from, which makes for a very deep journey! I hope to cover several avenues over time, but for now, the exploration here leans towards the classic dobsonian telescope and the 110 Messier Objects.<br><br>
+> Hi, my name is Mike. MessierExplore is a personal astronomy journey turned open toolkit — offering logbooks, sky guidance, and astrophotography utilities.<br><br>
+> There are many astro gear choices and methodologies to choose from, which makes for a very deep journey! I hope to cover several avenues over time, but for now, the exploration here leans towards the classic dobsonian telescope and the 110 Messier Objects, plus Jupiter's Great Red Spot.<br><br>
 > The suggested first quest in this journey is the Messier Observing Program for logging and sketching the 110 Messier objects of the night sky, with log book and assisted guidance computer below.<br><br>
 
 ---
@@ -27,7 +27,7 @@ _Free Astronomy Tools & Mini-Projects — explore the night sky with smart, begi
 
 ## Tools for Everyone
 
-> One page, easy access. No install required.
+> Easy access. No install required.
 
 ### 1) Messier Observing Logbook (Web App -> PDF)
 <img src="static/logbook_sample_bk.png" width=500><br>
@@ -35,25 +35,26 @@ _Free Astronomy Tools & Mini-Projects — explore the night sky with smart, begi
 - **Get your personalized PDF Free:** https://logbook.messierexplore.com
 - **Code:** Located in this repository as a python command-line script, and then as a cloud deployed web service.
 - **Features:** personalized cover page, tracking checklist, per-object log pages, sketch area, clean typography.
+- Pursue a certificate and pin from the Astronomical League with qualifying log completion!
 
 ### 2) Messier Target Guidance Computer (Web App: Container, Cloud Run, Cloud SQL)
 <img src="static/tcg_sample.png" width=500><br>
-- 📝 **Inputs:** location, passphrase  
+- 📝 **Inputs:** location (country + zipcode) 
 - 📊 **Outputs:** live-conditions-adjusted ranked list of suggested Messier targets at your location + explanations 
 - 🌐 **Try it:** https://tgc.messierexplore.com
 
 > 🚀 **Why Target Guidance Computer is Exciting**  
 > The Target Guidance Computer is more than a Messier checklist – it’s a smart companion that combines astronomy math with real-world conditions.  
-> ✨ Shows you what you haven’t logged yet  
 > 🌙 Highlights which objects sit high and clear of the Moon  
 > ☁️ Explains how tonight’s clouds, darkness, and sky quality affect your session; dew risk and heat/shield assessment too.
+> ✨ Shows you what you haven’t logged yet  
 >   
 > Minimalist design so you're up and running in seconds, with your approximate location, the tool personalizes your observing journey, tracks your “seen” list, and serves up the conditions and best targets for **tonight at 9 PM local time**.
-> 💡 Lightweight, free, and built to grow – practical backend engineering powering human-friendly exploration of the night sky.
+> 💡 Also added is Jupiter Great Red Spot (GRS) next transit time (at your location) so you can catch the 195 year old storm via live photons!
 
 ### 3) Dobsonian Astrophotography — Simple Stacking Utils (CLI, GUI.. tbd)
-- **What it is:** Lightweight, beginner-friendly image stacking pipeline for Dobsonian + MFT DSLR. For myself I'm planning micro four thirds DSLR size to keep size and weight down. While dobsonian is not expected to be top choice for astrophotography, it is nice for live photon-to-eyeball observing and I'm exploring the capture of this.
-- **Download:** (link to release binary or quickstart)
+- **What it is:** Lightweight, beginner-friendly image stacking pipeline for Dobsonian + MFT DSLR. For myself I'm planning to explore micro four thirds DSLR attachment to keep size and weight down. While dobsonian is not the highest grade choice for astrophotography, it is nice for live photon-to-eyeball observing and I'm exploring the capture of this.
+- **Download:** (tbd)
 
 > Want something added? Open an issue with feature ideas ✨
 
@@ -79,7 +80,7 @@ _Free Astronomy Tools & Mini-Projects — explore the night sky with smart, begi
 ### Quest 1: Messier Observing Program
 - [ ] YouTube Channel (journey to Astronomical League certification)  
 - [ ] Messier Logbook Generator (Docker / GCS / Cloud Run)  
-- [ ] Messier Target Guidance Computer (location-based, Cloud Run + SQL)  
+- [ ] Messier Target Guidance Computer (location-based)  
 
 ### Quest 2: Dobsonian Astrophotography
 - [ ] Image Stacking Pipeline Utilities (Dobsonian + MFT DSLR)  
