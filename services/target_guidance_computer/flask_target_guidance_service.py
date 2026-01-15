@@ -277,13 +277,13 @@ def render_main_display(acct, weather_html, reason_html, top5_html, bortleLink, 
             jupiter_altaz_degrees(next_utc, lat, lon) if (lat is not None and lon is not None) else (None, None)
         )
         if alt_deg is None:
-            altaz_html = "Jupiter Alt/Az at next transit: unknown"
+            altaz_html = "Jupiter Altitude at next transit: <i>unknown</i>"
         elif alt_deg < 0.0:
-            altaz_html = "Jupiter Alt/Az at next transit: <i>below horizon</i>"
+            altaz_html = "Jupiter Altitude at next transit: <i>below horizon</i>"
         else:
-            altaz_html = f"Jupiter Alt/Az at next transit: {alt_deg:.0f}° / {az_deg:.0f}°"
+            altaz_html = f"Jupiter Altitude at next transit: {alt_deg:.0f}° (Az: {az_deg:.0f}°)"
 
-        grs_html = f"Last GRS transit: {last_local}<br>Next GRS transit: {next_local}<br>{altaz_html}"
+        grs_html = f"Last GRS transit: {last_local}<br>Next GRS transit: {next_local}<br><font color=green>{altaz_html}</font><br><font color=orange><small><i>Timestamps reference GRS reaching center of Jupiter's disk.<br>Total viewable time during a transit approx 2 hours.<br>Altitude <25° or during daylight naturally not ideal.</i></small></font>"
     except Exception:
         grs_html = "GRS transit info unavailable. (Check data/jupiter_grs.json.)"
 
