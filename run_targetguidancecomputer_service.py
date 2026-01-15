@@ -44,8 +44,12 @@ def set_database_url_from_gsm(secret_name: str, project_id: str):
         print(f"Warning: Could not set DATABASE_URL from GSM: {e}")
 
 # --- Optionally set DATABASE_URL from GSM ---
-# Uncomment and set your secret name and project ID:
-set_database_url_from_gsm(os.environ["prod-database-url"], os.environ["your-gcp-project-id"])
+# Only runs if env vars are present. This avoids startup failures in environments
+# where Secret Manager isn't configured.
+secret_name = os.environ.get("PROD_DATABASE_URL_SECRET_NAME") or os.environ.get("prod-database-url")
+project_id = os.environ.get("GCP_PROJECT_ID") or os.environ.get("your-gcp-project-id")
+if secret_name and project_id:
+    set_database_url_from_gsm(secret_name, project_id)
 
 from services.target_guidance_computer.flask_target_guidance_service import app
 

@@ -3,3 +3,4 @@
 *.sketch
 *.ai
 .DS_Store
+.git/

@@ -28,9 +28,10 @@ from services.target_guidance_computer.assessment import (
 from services.target_guidance_computer.catalog_types import normalize_catalog_types
 from utils.weather import get_night_weather
 from utils.bortle import clearoutside_link
-from utils.time_helpers import local_date_iso, when_9pm_local
+from utils.time_helpers import local_date_iso, when_9pm_local, zoneinfo_for_coords
 from utils.geo import lookup_latlon
 from utils.moon import get_moon_state, moon_recommend_targets, moon_narrative
+from utils.jupiter_grs import grs_last_next_transits, jupiter_altaz_degrees, parse_iso8601_utc
 from utils.validation import (
     sanitize_country,
     sanitize_passphrase,
@@ -248,8 +249,44 @@ def render_main_display(acct, weather_html, reason_html, top5_html, bortleLink, 
     bortlechart_url = url_for('static', filename='bortlechart.png')
     bortlebadge_url = url_for('static', filename=f'bortle/bortle_unknown.png')
     logo_favicon = url_for('static', filename='favicon.ico')
+    jupiter_grs_url = url_for('static', filename='jupiter_grs.png')
     if acct.bortle:
         bortlebadge_url = url_for('static', filename=f'bortle/bortle_B{str(acct.bortle)}_overlay_bigtext.png')
+
+    # Side Quest: Jupiter Great Red Spot transit times (local)
+    try:
+        lat = float(acct.latitude) if acct.latitude else None
+        lon = float(acct.longitude) if acct.longitude else None
+        tz = zoneinfo_for_coords(lat, lon) if (lat is not None and lon is not None) else timezone.utc
+
+        # Get current time in UTC for accurate last/next calculation
+        now_utc = datetime.now(timezone.utc)
+        grs = grs_last_next_transits(now_utc)
+        last_utc = parse_iso8601_utc(grs["last_transit_utc"])
+        next_utc = parse_iso8601_utc(grs["next_transit_utc"])
+
+        # Convert to local time with timezone abbreviation
+        last_local_dt = last_utc.astimezone(tz)
+        next_local_dt = next_utc.astimezone(tz)
+        tz_abbr = last_local_dt.strftime("%Z")
+        
+        last_local = last_local_dt.strftime("%m/%d/%Y @ %I:%M %p") + f" {tz_abbr}"
+        next_local = next_local_dt.strftime("%m/%d/%Y @ %I:%M %p") + f" {tz_abbr}"
+
+        alt_deg, az_deg = (
+            jupiter_altaz_degrees(next_utc, lat, lon) if (lat is not None and lon is not None) else (None, None)
+        )
+        if alt_deg is None:
+            altaz_html = "Jupiter Alt/Az at next transit: unknown"
+        elif alt_deg < 0.0:
+            altaz_html = "Jupiter Alt/Az at next transit: <i>below horizon</i>"
+        else:
+            altaz_html = f"Jupiter Alt/Az at next transit: {alt_deg:.0f}° / {az_deg:.0f}°"
+
+        grs_html = f"Last GRS transit: {last_local}<br>Next GRS transit: {next_local}<br>{altaz_html}"
+    except Exception:
+        grs_html = "GRS transit info unavailable. (Check data/jupiter_grs.json.)"
+
     return f"""
         <html>
         {html_style()}
@@ -309,6 +346,14 @@ def render_main_display(acct, weather_html, reason_html, top5_html, bortleLink, 
                 <td class="night-sky-value">
                     {top5_html}
                 </td>
+            </tr>
+            <tr>
+                <td class="night-sky-label" valign=top>Side Quest:<br>Jupiter Great Red Spot</td>
+                <td class="night-sky-value">
+                    <table border=0><tr><td bgcolor=black><img src="{jupiter_grs_url}" alt="Jupiter GRS" width="100">
+                     </td><td>{grs_html}</td></tr></table>
+                </td>
+            </tr>
             </table>
             <br>
             <form method="post" action="/settings">
@@ -362,6 +407,38 @@ def catalog():
     API endpoint to return the Messier catalog.
     """
     return jsonify(CATALOG)
+
+
+@app.get("/api/jupiter/grs")
+def jupiter_grs():
+    """Return last/next Great Red Spot transit times (UTC).
+
+    This endpoint does not scrape any third-party sites. It computes transits from
+    a reference transit timestamp + System II rotation period.
+
+    Query params:
+        when: optional ISO8601 datetime (e.g. 2026-01-13T03:41:00Z). If omitted, uses now.
+
+    Configuration:
+        - JUPITER_GRS_REFERENCE_TRANSIT_UTC (or JUPITER_GRS_SOURCE_URL)
+        - JUPITER_SYSTEM2_ROTATION_PERIOD_SECONDS (optional)
+    """
+
+    when_raw = (request.args.get("when") or "").strip()
+    try:
+        when_dt = parse_iso8601_utc(when_raw) if when_raw else None
+        return jsonify(grs_last_next_transits(when_dt))
+    except Exception as e:
+        return (
+            jsonify(
+                {
+                    "ok": False,
+                    "error": str(e),
+                    "howto": "Set JUPITER_GRS_REFERENCE_TRANSIT_UTC / JUPITER_GRS_SOURCE_FILE / JUPITER_GRS_SOURCE_URL",
+                }
+            ),
+            503,
+        )
 
 @app.route("/settings", methods=["POST"])
 def update_settings():
@@ -537,16 +614,16 @@ def index():
     <tr><td class="night-sky-label">Country:</td><td><select name="country" required>{country_options}</select></td></tr>
     <tr><td class="night-sky-label">Zip code:</td><td><input type="text" name="zipcode" maxlength="10" value="90210" required></td></tr>
     <tr><td class="night-sky-label">Enter any room key:</td><td><input type="text" name="passphrase" maxlength="50" value="guest" required></td></tr>
-            <tr><td colspan=2 align=center><br><button type="submit">Engage!</button><br></td></tr>
+            <tr><td colspan=2 align=center><br><button type="submit">Enter!</button><br></td></tr>
         </table>
     </form>
     <footer class="footer">
         <p>
-            <b><font color=lime>If you come back again with the same room and key, your settings/progress will be remembered. Happy Messier Hunting!</font></b><br><br>
+            <b><font color=lime>No registration needed, hit Enter to demo! Or use your own room name/key to personalize.</font></b><br><br>
             Free to use • No ads • No tracking • Open source<br>
             Created with ❤️ for the astronomy community<br>
             <a href="https://github.com/stanlm105/MessierExplore">View on GitHub</a> | 
-            <a href="mailto:stanlm@gmail.com">Contact</a> | 21 Sep 2025
+            <a href="mailto:stanlm@messierexplore.com">Contact</a> | 21 Sep 2025
         </p>
     </footer>
     {persistence_script}

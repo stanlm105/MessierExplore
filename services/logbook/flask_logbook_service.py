@@ -95,7 +95,7 @@ def index() -> str:
             "name_label": (
                 "以下のPDFは、夜空に浮かぶ110個のメシエ天体の観測記録を印刷できるログブックです。<br><br>"
                 "ログブックの表紙にあなたの名前を入力してください（これは単なる楽しみとインスピレーションのためのもので、名前の記録はありません）。"
-                "もしこれがあなたの旅の助けになったと感じたら、stanlm@gmail.comまでメッセージをお送りください。ありがとうございます！<br><br>"
+                "もしこれがあなたの旅の助けになったと感じたら、stanlm@messierexplore.comまでメッセージをお送りください。ありがとうございます！<br><br>"
                 "お名前またはニックネームを入力してください："
             ),
             "button": "PDFをダウンロード",
@@ -109,7 +109,7 @@ def index() -> str:
             "name_label": (
                 "The pdf below will be a printable log book for tracking observations of the 110 Messier objects in the night sky.<br><br>"
                 "Enter your name for personalization of the logbook cover (this is just for fun and inspiration, there is no log saved here of any names). "
-                "If you find this helps your journey, please send a little hello to stanlm@gmail.com, thanks!<br><br>"
+                "If you find this helps your journey, please send a little hello to stanlm@messierexplore.com, thanks!<br><br>"
                 "Please enter your name or nickname:"
             ),
             "button": "Download PDF",

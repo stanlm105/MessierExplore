@@ -49,6 +49,16 @@ ehthumbs.db
 .git/
 .gitignore
 
+# Tests and docs
+tests/
+*.md
+README.md
+LICENSE
+docs/
+
+# Output
+output/
+
 # Output / generated files
 output/
 *.pdf

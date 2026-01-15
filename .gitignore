@@ -20,8 +20,11 @@
 # Python
 __pycache__/
 *.py[cod]
+*.pyc
 *$py.class
 .Python
+.pytest_cache/
+.mypy_cache/
 
 # Distribution / packaging
 build/
